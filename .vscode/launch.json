@@ -9,7 +9,7 @@
             "type": "python",
             "request": "launch",
             "module": "minimal_amcrest",
-            "justMyCode": true,
+            "justMyCode": false,
             "args": [
                 "-c",
                 "config.toml"
