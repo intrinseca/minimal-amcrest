@@ -157,6 +157,26 @@ files = [
 ]
 
 [[package]]
+name = "asyncio-mqtt"
+version = "0.16.1"
+description = "Idiomatic asyncio wrapper around paho-mqtt"
+category = "main"
+optional = false
+python-versions = ">=3.7"
+files = [
+    {file = "asyncio_mqtt-0.16.1-py3-none-any.whl", hash = "sha256:ef12c1d0250ffd65b70085d66c457128ed6aa98b3d821d2316213fb9d1957d5b"},
+    {file = "asyncio_mqtt-0.16.1.tar.gz", hash = "sha256:38416481bb7cc9613c6a1a8e58b8f9f9c9a522d93411003e8000e74ef2b7ed85"},
+]
+
+[package.dependencies]
+paho-mqtt = ">=1.6.0"
+
+[package.extras]
+format = ["black (>=22.10.0)"]
+lint = ["mypy (>=0.991)", "ruff (>=0.0.158)", "types-paho-mqtt (>=1.6.0.1)"]
+tests = ["anyio (>=3.6.2)", "pytest (>=7.2.0)", "pytest-cov (>=4.0.0)"]
+
+[[package]]
 name = "attrs"
 version = "22.2.0"
 description = "Classes Without Boilerplate"
@@ -682,6 +702,20 @@ files = [
 ]
 
 [[package]]
+name = "paho-mqtt"
+version = "1.6.1"
+description = "MQTT version 5.0/3.1.1 client class"
+category = "main"
+optional = false
+python-versions = "*"
+files = [
+    {file = "paho-mqtt-1.6.1.tar.gz", hash = "sha256:2a8291c81623aec00372b5a85558a372c747cbca8e9934dfe218638b8eefc26f"},
+]
+
+[package.extras]
+proxy = ["PySocks"]
+
+[[package]]
 name = "pathspec"
 version = "0.11.0"
 description = "Utility library for gitignore style pattern matching of file paths."
@@ -811,6 +845,18 @@ python-versions = ">=3.7"
 files = [
     {file = "typing_extensions-4.5.0-py3-none-any.whl", hash = "sha256:fb33085c39dd998ac16d1431ebc293a8b3eedd00fd4a32de0ff79002c19511b4"},
     {file = "typing_extensions-4.5.0.tar.gz", hash = "sha256:5cb5f4a79139d699607b3ef622a1dedafa84e115ab0024e0d9c044a9479ca7cb"},
+]
+
+[[package]]
+name = "voluptuous"
+version = "0.13.1"
+description = ""
+category = "main"
+optional = false
+python-versions = "*"
+files = [
+    {file = "voluptuous-0.13.1-py3-none-any.whl", hash = "sha256:4b838b185f5951f2d6e8752b68fcf18bd7a9c26ded8f143f92d6d28f3921a3e6"},
+    {file = "voluptuous-0.13.1.tar.gz", hash = "sha256:e8d31c20601d6773cb14d4c0f42aee29c6821bbd1018039aac7ac5605b489723"},
 ]
 
 [[package]]
@@ -978,4 +1024,4 @@ multidict = ">=4.0"
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.10"
-content-hash = "1438b12719e3410e46c4b5dddfb1d761bd1bd0a124ddfda76eab5e8b1c35dec3"
+content-hash = "9bc8778c8964dd3a2a11e051ea8e8f0bf110e7b2345b4766ac1d4e559a060afa"
