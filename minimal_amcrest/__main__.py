@@ -1,12 +1,14 @@
+"""
+Script to retrieve events from Amcrest doorbell and pass them to MQTT
+"""
+
 import asyncio
-import datetime
 import signal
 
 import aiohttp
 import asyncio_mqtt
 import click
 import tomli
-from halo import Halo
 from voluptuous import Required, Schema
 
 from .digest import DigestAuth
@@ -26,7 +28,8 @@ config_schema = Schema(
 cancel = asyncio.Event()
 
 
-def sigint_handler(signum, frame):
+def sigint_handler(*_):
+    """Handle SIGINT and signal the async loops to exit"""
     print("Exiting")
     cancel.set()
 
@@ -37,28 +40,42 @@ event_queue = asyncio.Queue()
 
 
 class Doorbell:
+    """
+    API wrapper for Amcrest doorbell API
+    """
+
     def __init__(self, host, username, password):
+        """
+        Initialise API
+        """
         self.host = host
         self.username = username
         self.password = password
 
+        self._session = None
+        self._auth = None
+
     async def __aenter__(self):
+        """Create async http session"""
         timeout = aiohttp.ClientTimeout(total=None, connect=10, sock_read=15)
         self._session = aiohttp.ClientSession(timeout=timeout)
         self._auth = DigestAuth(self.username, self.password, self._session)
         return self
 
     async def __aexit__(self, *err):
+        """Close down async http session"""
         self._auth = None
         await self._session.close()
         self._session = None
 
     async def poll_for_events(self):
+        """Long poll for doorbell events"""
         while not cancel.is_set():
             print(f"Connecting to host {self.host}")
             response = await self._auth.request(
                 "GET",
-                f"http://{self.host}/cgi-bin/eventManager.cgi?action=attach&codes=[CallNoAnswered]&heartbeat=5",
+                f"http://{self.host}/cgi-bin/eventManager.cgi?"
+                "action=attach&codes=[CallNoAnswered]&heartbeat=5",
             )
             response.raise_for_status()
 
@@ -77,6 +94,7 @@ class Doorbell:
                         await event_queue.put("Doorbell")
 
     async def get_system_info(self):
+        """Get the system info dict from the doorbell"""
         response = await self._auth.request(
             "GET",
             f"http://{self.host}/cgi-bin/magicBox.cgi?action=getSystemInfo",
@@ -90,6 +108,7 @@ class Doorbell:
 
 
 async def mqtt(serial, host):
+    """Connect the MQTT server and send events to it"""
     reconnect_interval = 5  # In seconds
 
     while not cancel.is_set():
@@ -122,6 +141,7 @@ async def mqtt(serial, host):
 
 
 async def async_main(config):
+    """async main function to create API objects"""
     async with Doorbell(**config["amcrest"]) as doorbell:
         serial = (await doorbell.get_system_info())["serialNumber"]
 
@@ -136,10 +156,11 @@ async def async_main(config):
     type=click.File(mode="rb"),
 )
 def main(config_file):
+    """Synchronous main function for click"""
     config = config_schema(tomli.load(config_file))
 
     asyncio.run(async_main(config))
 
 
 if __name__ == "__main__":
-    main()
+    main()  # pylint: disable=no-value-for-parameter

@@ -18,7 +18,11 @@ asyncio-mqtt = "^0.16.1"
 [tool.poetry.group.dev.dependencies]
 pylint = "^2.16.2"
 black = "^23.1.0"
+flake8 = "^6.0.0"
 
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
+
+[tool.pylint]
+ignore-paths = "minimal_amcrest/digest.py"

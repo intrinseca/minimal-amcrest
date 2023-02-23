@@ -1,14 +1,17 @@
+# flake8: noqa
+
 """Dahua Digest Auth Support"""
+import hashlib
 import os
 import time
-import hashlib
+
 import aiohttp
-from aiohttp.client_reqrep import ClientResponse
 from aiohttp.client_exceptions import ClientError
+from aiohttp.client_reqrep import ClientResponse
 from yarl import URL
 
-
-# Seems that aiohttp doesn't support Diegest Auth, which Dahua cams require. So I had to bake it in here.
+# Seems that aiohttp doesn't support Diegest Auth, which Dahua cams require.
+# So I had to bake it in here.
 # Copied and then modified from https://github.com/aio-libs/aiohttp/pull/2213
 # I really wish this was baked into aiohttp :-(
 
@@ -19,7 +22,13 @@ class DigestAuth:
     https://github.com/requests/requests/blob/v2.18.4/requests/auth.py.
     """
 
-    def __init__(self, username: str, password: str, session: aiohttp.ClientSession, previous=None):
+    def __init__(
+        self,
+        username: str,
+        password: str,
+        session: aiohttp.ClientSession,
+        previous=None,
+    ):
         if previous is None:
             previous = {}
 
